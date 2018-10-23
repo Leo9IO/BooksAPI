@@ -90,6 +90,18 @@ namespace BooksAPI.Controllers
                 .Select(AsBookDto);
         }
 
+        //GET request to /api/books/date/yyyy-mm-dd, where yyyy-mm-dd is the date.
+        [Route("date/{pubdate:datetime:regex(\\d{4}-\\d{2}-\\d{2})}")]   // enforces YYYY-MM-DD formatting
+        [Route("date/{*pubdate:datetime:regex(\\d{4}/\\d{2}/\\d{2})}")]  // allows for slash inputs
+        // invalid dates are caught 
+        public IQueryable<BookDto> GetBooks(DateTime pubdate)
+        {
+            return db.Books.Include(b => b.Author)
+                .Where(b => DbFunctions.TruncateTime(b.PublishDate)
+                    == DbFunctions.TruncateTime(pubdate))
+                .Select(AsBookDto);
+        }
+
         protected override void Dispose(bool disposing)
         {
             db.Dispose();
