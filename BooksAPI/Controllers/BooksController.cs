@@ -81,6 +81,15 @@ namespace BooksAPI.Controllers
                 .Select(AsBookDto);
         }
 
+        //GET request to /api/authors/id/books, where id is the ID of the author.
+        [Route("~/api/authors/{authorId:int}/books")]
+        public IQueryable<BookDto> GetBooksByAuthor(int authorId)
+        {
+            return db.Books.Include(b => b.Author)
+                .Where(b => b.AuthorId == authorId)
+                .Select(AsBookDto);
+        }
+
         protected override void Dispose(bool disposing)
         {
             db.Dispose();
