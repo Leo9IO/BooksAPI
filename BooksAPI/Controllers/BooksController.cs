@@ -10,6 +10,7 @@ using System.Web.Http.Description;
 
 namespace BooksAPI.Controllers
 {
+    [RoutePrefix("api/books")]
     public class BooksController : ApiController
     {
         private BooksAPIContext db = new BooksAPIContext();
@@ -24,12 +25,14 @@ namespace BooksAPI.Controllers
             };
 
         // GET api/Books
+        [Route("")]
         public IQueryable<BookDto> GetBooks()
         {
             return db.Books.Include(b => b.Author).Select(AsBookDto);
         }
 
         // GET api/Books/5
+        [Route("{id:int}")]
         [ResponseType(typeof(BookDto))]
         public async Task<IHttpActionResult> GetBook(int id)
         {
