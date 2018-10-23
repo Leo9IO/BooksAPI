@@ -72,6 +72,15 @@ namespace BooksAPI.Controllers
             return Ok(book);
         }
 
+        //GET request to /api/books/genre, where genre is the name of the genre. (For example, /api/books/fantasy.)
+        [Route("{genre}")]
+        public IQueryable<BookDto> GetBooksByGenre(string genre)
+        {
+            return db.Books.Include(b => b.Author)
+                .Where(b => b.Genre.Equals(genre, StringComparison.OrdinalIgnoreCase))
+                .Select(AsBookDto);
+        }
+
         protected override void Dispose(bool disposing)
         {
             db.Dispose();
